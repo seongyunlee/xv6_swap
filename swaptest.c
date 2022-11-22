@@ -19,7 +19,7 @@ int main () {
         fork();
     }
     
-
+    while(wait());;
     printf(1,"swapstat %d %d\n",a,b);
     exit();
 }
