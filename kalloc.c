@@ -128,7 +128,7 @@ int allocSwapBlock(){
   for(int i=0;i<SWAPMAX/8;i++){
     if(*byte==0xFFFFFFFF) continue;
     for(int ind=0;ind<32;ind++){
-      if((1<<ind)&*byte == 0){
+      if((1<<ind)&(*byte) == 0){
         *byte = (*byte | 1<<ind);
         release(&swapTable.lock);
         return (i*8)+ind;
