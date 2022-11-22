@@ -8,7 +8,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "spinlock.h"
-
+void lru_pop2(char* va,pde_t *pgdir,int pa);
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
                    // defined by the kernel linker script in kernel.ld
