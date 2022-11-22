@@ -12,14 +12,13 @@
 int main () {
     int a,b;
 
-    char *p = malloc(40960);
+    char *p = malloc(409600);
     printf(1,"allocate 10 pages%x\n",(int)p);
     swapstat(&a, &b);
     for(int i=0;i<10;i++){
         fork();
     }
-    
-    while(wait());;
+
     printf(1,"swapstat %d %d\n",a,b);
     exit();
 }
