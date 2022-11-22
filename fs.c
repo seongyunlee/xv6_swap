@@ -697,7 +697,9 @@ void swapwrite(char* ptr, int blkno)
     cprintf("swap out to %d \n",blkno * 8 + SWAPBASE + i);
 		bp = bread(0, blkno * 8 + SWAPBASE + i);
 		memmove(bp->data, ptr + i * BSIZE, BSIZE);
+    cprintf("buf1\n");
 		bwrite(bp);
+    cprintf("buf2\n");
 		brelse(bp);
     cprintf("release\n");
 	}
