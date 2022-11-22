@@ -162,6 +162,8 @@ int reclaim(){
       uint pa = PTE_ADDR(*pte);
       char *ptr = P2V(pa);
       swapwrite(ptr,blknum);
+      *pte = *pte & ~PTE_P & 0xFFF;
+      *pte = *pte | (blknum<<12);
       break;
     }
     p=p->next;
@@ -182,13 +184,14 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
     page_lru_head=p;
     p->next=p;
     p->prev=p;
+    num_lru_pages++;
   }
   else{
-  p->next = page_lru_head;
-  p->prev = page_lru_head->prev;
-  page_lru_head->prev->next=p;
-  page_lru_head->prev = p;
-  num_lru_pages++;
+    p->next = page_lru_head;
+    p->prev = page_lru_head->prev;
+    page_lru_head->prev->next=p;
+    page_lru_head->prev = p;
+    num_lru_pages++;
   }
   cprintf("get lock\n");
   release(&lru_head_lock);
