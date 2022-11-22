@@ -170,6 +170,8 @@ int reclaim(){
       }
       uint pa = PTE_ADDR(*pte);
       char *ptr = P2V(pa);
+      lru_pop(p->vaddr,p->pgdir,pa);
+      release(&lru_head_lock);
       swapwrite(ptr,blknum);
       *pte = *pte & ~PTE_P & 0xFFF;
       *pte = *pte | (blknum<<12);
@@ -177,7 +179,6 @@ int reclaim(){
     }
     p=p->next;
   }
-  release(&lru_head_lock);
   return 1;
 }
 void lru_insert(char* va,pde_t *pgdir,int pa){
