@@ -123,7 +123,7 @@ kalloc(void)
   return (char*)r;
 }
 int allocSwapBlock(){
-  acquire(&swapTable.lock);
+  //acquire(&swapTable.lock);
   int *byte = swapTable.bitmap;
   for(int i=0;i<SWAPMAX/8;i++){
     if(*byte==0xFFFFFFFF) continue;
@@ -136,7 +136,7 @@ int allocSwapBlock(){
     }
     byte++;
   }
-  release(&swapTable.lock);
+  //release(&swapTable.lock);
   return -1;
 }
 
@@ -145,8 +145,8 @@ int reclaim(){
   cprintf("reclaim! the lru length %d\n",num_lru_pages);
   struct page *p=lru_clock_hand;
   if(!p) p = page_lru_head;
-  acquire(&lru_head_lock);
-  cprintf("acquire lru head lock\n");
+  //acquire(&lru_head_lock);
+  //cprintf("acquire lru head lock\n");
   while(1){
     if(!p) return -1;
     //clock algorithm;
@@ -155,7 +155,7 @@ int reclaim(){
     pte_t *pte=walkpgdir(p->pgdir,p->vaddr,0);
     if((PTE_U & *pte)==0) panic("not user page");
     if(!((*pte)& PTE_P)){
-      release(&lru_head_lock);
+      //release(&lru_head_lock);
       panic("not present page");
       return -1;
       }
@@ -165,14 +165,14 @@ int reclaim(){
     else{
       int blknum = allocSwapBlock();
       if(blknum==-1){
-        release(&lru_head_lock);
+        //release(&lru_head_lock);
         cprintf("no swap space\n");
         return -1;
       }
       uint pa = PTE_ADDR(*pte);
       char *ptr = P2V(pa);
       lru_pop2(p->vaddr,p->pgdir,pa);
-      release(&lru_head_lock);
+      //release(&lru_head_lock);
       swapwrite(ptr,blknum);
       *pte = *pte & ~PTE_P & 0xFFF;
       *pte = *pte | (blknum<<12);
@@ -189,7 +189,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   p->vaddr=va;
   p->pgdir=pgdir;
   
-  acquire(&lru_head_lock);
+  //acquire(&lru_head_lock);
   if(!page_lru_head){
     page_lru_head=p;
     p->next=p;
@@ -221,7 +221,7 @@ void lru_pop2(char* va,pde_t *pgdir,int pa){
 void lru_pop(char* va,pde_t *pgdir,int pa){
   int framenumber = pa/PGSIZE;
   struct page *p = &pages[framenumber];
-  acquire(&lru_head_lock);
+  //acquire(&lru_head_lock);
   struct page *cur = page_lru_head;
   for(int i=0;i<num_lru_pages;i++){
     if(cur==p){
@@ -231,5 +231,5 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
       break;
     }
   }
-  release(&lru_head_lock);
+  //release(&lru_head_lock);
 }
