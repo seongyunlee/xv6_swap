@@ -190,7 +190,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   page_lru_head->prev = p;
   num_lru_pages++;
   }
-  cprinf("get lock\n");
+  cprintf("get lock\n");
   release(&lru_head_lock);
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
