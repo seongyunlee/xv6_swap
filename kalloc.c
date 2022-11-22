@@ -173,7 +173,7 @@ int reclaim(){
       char *ptr = P2V(pa);
       lru_pop2(p->vaddr,p->pgdir,pa);
       //release(&lru_head_lock);
-      swapwrite(ptr,100);
+      swapwrite(ptr,blknum);
       *pte = *pte & ~PTE_P & 0xFFF;
       *pte = *pte | (blknum<<12);
       break;
