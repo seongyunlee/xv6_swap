@@ -218,6 +218,7 @@ void lru_pop2(struct page *p){
       num_lru_pages--;
       return;
     }
+    cur=cur->next;
   }
   cprintf("no pop\n");
 }
@@ -235,6 +236,7 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
       release(&lru_head_lock);
       return;
     }
+    cur=cur->next;
   }
   cprintf("no pop\n");
   release(&lru_head_lock);
