@@ -130,7 +130,6 @@ int allocSwapBlock(){
   return -1;
 }
 
-
 int reclaim(){
   //select victim
   struct page *p=lru_clock_hand;
@@ -149,8 +148,9 @@ int reclaim(){
       if(blknum==-1){
         return -1;
       }
-      uint pa = P2V(PTE_ADDR(*pte));
-      swapwrite((char *)(pa),blknum);
+      uint pa = PTE_ADDR(*pte);
+      char *ptr = P2V(pa);
+      swapwrite(ptr,blknum);
       break;
     }
     p=p->next;
