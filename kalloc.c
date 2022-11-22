@@ -216,6 +216,7 @@ void lru_pop2(struct page *p){
     if(cur==p){
       cur->prev->next=cur->next;
       cur->next->prev=cur->prev;
+      page_lru_head=cur->prev;
       num_lru_pages--;
       return;
     }
@@ -233,6 +234,7 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
     if(cur==p){
       cur->prev->next=cur->next;
       cur->next->prev=cur->prev;
+      page_lru_head=cur->prev;
       num_lru_pages--;
       release(&lru_head_lock);
       return;
