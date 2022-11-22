@@ -99,10 +99,11 @@ bread(uint dev, uint blockno)
   struct buf *b;
 
   b = bget(dev, blockno);
-  cprintf("bget?\n");
+  cprintf("bread blkno %d\n",blockno);
   if((b->flags & B_VALID) == 0) {
     iderw(b);
   }
+  
   return b;
 }
 
