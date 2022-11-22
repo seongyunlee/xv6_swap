@@ -145,7 +145,7 @@ int reclaim(){
   cprintf("reclaim!\n");
   struct page *p=lru_clock_hand;
   while(1){
-    if(!p) break;
+    if(!p) return -1;
     //clock algorithm;
     //if access bit 0 -> swap out
     //else change it to 0
