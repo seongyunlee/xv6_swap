@@ -694,6 +694,7 @@ void swapwrite(char* ptr, int blkno)
 
 	for ( i=0; i < 8; ++i ) {
 		nr_sectors_write++;
+    cprintf("swap out to %d \n",blkno * 8 + SWAPBASE + i);
 		bp = bread(0, blkno * 8 + SWAPBASE + i);
 		memmove(bp->data, ptr + i * BSIZE, BSIZE);
 		bwrite(bp);
