@@ -130,7 +130,7 @@ int allocSwapBlock(){
     for(int ind=0;ind<32;ind++){
       if(((1<<ind)&(*byte)) == 0){
         *byte = (*byte | 1<<ind);
-        release(&swapTable.lock);
+        //release(&swapTable.lock);
         return (i*8)+ind;
       }
     }
@@ -203,7 +203,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
     page_lru_head->prev = p;
     num_lru_pages++;
   }
-  release(&lru_head_lock);
+//release(&lru_head_lock);
 }
 void lru_pop2(char* va,pde_t *pgdir,int pa){
   int framenumber = pa/PGSIZE;
