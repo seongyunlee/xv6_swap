@@ -18,7 +18,7 @@ struct run {
 };
 struct {
   struct spinlock lock;
-  char *bitmap;
+  int *bitmap;
 } swapTable;
 
 struct {
@@ -58,7 +58,7 @@ void
 swapinit(void){
   initlock(&swapTable.lock,"swaptable");
   initlock(&lru_head_lock,"lru head lock");
-  swapTable.bitmap=kalloc();
+  swapTable.bitmap=(int*)kalloc();
   cprintf("swap init\n");
   memset(swapTable.bitmap,0,PGSIZE);
 }
@@ -124,11 +124,11 @@ kalloc(void)
 }
 int allocSwapBlock(){
   acquire(&swapTable.lock);
-  char *byte = swapTable.bitmap;
-  for(int i=0;i<=(SWAPMAX-SWAPBASE)/8;i++){
-    if((int)(*byte)==0) continue;
-    for(int ind=0;ind<8;ind++){
-      if(1<<ind==*byte){
+  int *byte = swapTable.bitmap;
+  for(int i=0;i<SWAPMAX/8;i++){
+    if(*byte==0xFFFFFFFF) continue;
+    for(int ind=0;ind<32;ind++){
+      if((1<<ind)&*byte == 0){
         *byte = (*byte | 1<<ind);
         release(&swapTable.lock);
         return (i*8)+ind;
