@@ -188,9 +188,9 @@ inituvm(pde_t *pgdir, char *init, uint sz)
   if(sz >= PGSIZE)
     panic("inituvm: more than a page");
   mem = kalloc();
-  lru_insert((char *)0,pgdir,V2P(mem));
   memset(mem, 0, PGSIZE);
   mappages(pgdir, 0, PGSIZE, V2P(mem), PTE_W|PTE_U);
+  lru_insert((char *)0,pgdir,PTE_ADDR(*walkpgdir(pgdir,0,0)));
   memmove(mem, init, sz);
 }
 
@@ -246,7 +246,7 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       kfree(mem);
       return 0;
     }
-    lru_insert((char*)a,pgdir,V2P(mem));
+    lru_insert((char*)a,pgdir,PTE_ADDR(*walkpgdir(pgdir,a,0)));
   }
   return newsz;
 }
@@ -341,7 +341,7 @@ copyuvm(pde_t *pgdir, uint sz)
       kfree(mem);
       goto bad;
     }
-    lru_insert((char *)i,d,V2P(mem));
+    lru_insert((char *)i,d,PTE_ADDR(*walkpgdir(d,i,0)));
   }
   return d;
 
