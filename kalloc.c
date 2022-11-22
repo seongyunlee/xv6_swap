@@ -144,7 +144,7 @@ int reclaim(){
   //select victim
   cprintf("reclaim! the lru length %d\n",num_lru_pages);
   struct page *p=lru_clock_hand;
-  acquire(&lru_head_lock);
+  //acquire(&lru_head_lock);
   while(1){
     if(!p) return -1;
     //clock algorithm;
@@ -175,7 +175,7 @@ int reclaim(){
     }
     p=p->next;
   }
-  release(&lru_head_lock);
+  //release(&lru_head_lock);
   return 1;
 }
 void lru_insert(char* va,pde_t *pgdir,int pa){
