@@ -17,5 +17,5 @@ int main () {
     swapstat(a, b);
 
     printf(1,"swapstat %d %d\n",*a,*b);
-    return 1;
+    return 0;
 }
