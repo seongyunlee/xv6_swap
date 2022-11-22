@@ -56,8 +56,8 @@ kinit2(void *vstart, void *vend)
 }
 void
 swapinit(void){
-  initlock(&swapTable.lock,"swaptable");
-  initlock(&lru_head_lock,"lru head lock");
+  //initlock(&swapTable.lock,"swaptable");
+  //initlock(&lru_head_lock,"lru head lock");
   swapTable.bitmap=(int*)kalloc();
   cprintf("swap init\n");
   memset(swapTable.bitmap,0,PGSIZE);
