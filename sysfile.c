@@ -476,7 +476,8 @@ int sys_swapstat(void)
 			argptr(1, (void*)&nr_write, sizeof(*nr_write)) < 0)
 		return -1;
 
-	*nr_read = nr_sectors_read;
-	*nr_write = nr_sectors_write;
+  cprintf("%d %d\n",nr_sectors_read,nr_sectors_write);
+	//*nr_read = nr_sectors_read;
+	//*nr_write = nr_sectors_write;
 	return 0;
 }
