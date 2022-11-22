@@ -113,9 +113,9 @@ try_again:
     kmem.freelist = r->next;
   if(kmem.use_lock)
     release(&kmem.lock);
-  int frameNumber = V2P(r)/PGSIZE;
-  struct proc *p = myproc();
-  pages[frameNumber].pgdir = p->pgdir;
+  //int frameNumber = V2P(r)/PGSIZE;
+  //struct proc *p = myproc();
+  //pages[frameNumber].pgdir = p->pgdir;
   return (char*)r;
 }
 int allocSwapBlock(){
