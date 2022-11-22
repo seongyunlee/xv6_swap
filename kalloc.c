@@ -107,8 +107,10 @@ kalloc(void)
 try_again:  
   r = kmem.freelist;
   if(!r){
-    if(reclaim()>0)
+    if(reclaim()>0){
+      cprintf("reclaim success");
       goto try_again;
+    }
     else{
       cprintf("Out of memory");
       return 0;
@@ -166,6 +168,7 @@ int reclaim(){
   return 1;
 }
 void lru_insert(char* va,pde_t *pgdir,int pa){
+  cprintf("lru insert\n");
   int framenumber = pa/PGSIZE;
   struct page *p = &pages[framenumber];
   p->vaddr=va;
@@ -179,6 +182,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   release(&lru_head_lock);
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
+  cprintf("lru pop\n");
   int framenumber = pa/PGSIZE;
   struct page *p = &pages[framenumber];
   acquire(&lru_head_lock);
