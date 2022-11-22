@@ -274,7 +274,7 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       if(pa == 0)
         panic("kfree");
       char *v = P2V(pa);
-      lru_pop(v,pgdir,(int)pa);
+      if(PTE_U & *pte) lru_pop(v,pgdir,(int)pa);
       kfree(v);
       *pte = 0;
     }
@@ -341,7 +341,7 @@ copyuvm(pde_t *pgdir, uint sz)
       kfree(mem);
       goto bad;
     }
-    lru_insert((char *)i,d,(int)PTE_ADDR(*walkpgdir(d,(char*)i,0)));
+    if(flags & PTE_U) lru_insert((char *)i,d,(int)PTE_ADDR(*walkpgdir(d,(char*)i,0)));
   }
   return d;
 
