@@ -14,7 +14,8 @@ int main () {
         printf(1,"when swap? %d\n",i);
         sbrk(409600);
     }
-
+    int a,b;
+    swapstat(&a,&b);
     printf(1,"swapstat %d %d\n",a,b);
     exit();
 }
