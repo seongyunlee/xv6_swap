@@ -146,7 +146,7 @@ int reclaim(){
   struct page *p=lru_clock_hand;
   if(!p) p = page_lru_head;
   acquire(&lru_head_lock);
-  cprintf("acquire lru head lock");
+  cprintf("acquire lru head lock\n");
   while(1){
     if(!p) return -1;
     //clock algorithm;
