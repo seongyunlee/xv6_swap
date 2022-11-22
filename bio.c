@@ -68,7 +68,6 @@ bget(uint dev, uint blockno)
   // Is the block already cached?
   for(b = bcache.head.next; b != &bcache.head; b = b->next){
     if(b->dev == dev && b->blockno == blockno){
-      cprintf("why\n");
       b->refcnt++;
       release(&bcache.lock);
       acquiresleep(&b->lock);
@@ -100,6 +99,7 @@ bread(uint dev, uint blockno)
   struct buf *b;
 
   b = bget(dev, blockno);
+  cprintf("bget?\n");
   if((b->flags & B_VALID) == 0) {
     iderw(b);
   }
