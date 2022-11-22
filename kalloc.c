@@ -235,4 +235,5 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
     }
   }
   cprintf("no pop\n");
+  release(&lru_head_lock);
 }
