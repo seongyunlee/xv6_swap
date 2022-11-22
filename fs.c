@@ -699,6 +699,7 @@ void swapwrite(char* ptr, int blkno)
 		memmove(bp->data, ptr + i * BSIZE, BSIZE);
 		bwrite(bp);
 		brelse(bp);
+    cprintf("release\n");
 	}
 }
 
