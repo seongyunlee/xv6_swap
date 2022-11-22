@@ -105,12 +105,11 @@ kalloc(void)
 
   if(kmem.use_lock)
     acquire(&kmem.lock);
-try_again:  
+
   r = kmem.freelist;
   if(!r){
     if(reclaim()>0){
       cprintf("reclaim success");
-      goto try_again;
     }
     else{
       cprintf("Out of memory");
