@@ -102,14 +102,16 @@ kalloc(void)
 {
   struct run *r = (struct run*)0;
 
-
+try_again:
   if(kmem.use_lock)
     acquire(&kmem.lock);
-
   r = kmem.freelist;
   if(!r){
+    if(kmem.use_lock)
+      release(&kmem.lock);
     if(reclaim()>0){
       cprintf("reclaim success");
+      goto try_again;
     }
     else{
       cprintf("Out of memory");
