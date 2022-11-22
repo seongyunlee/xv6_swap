@@ -173,6 +173,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   int framenumber = pa/PGSIZE;
   cprintf("frame number %d\n",framenumber);
   //struct page *p = &pages[framenumber];
+  /*
   p->vaddr=va;
   p->pgdir=pgdir;
   acquire(&lru_head_lock);
@@ -181,7 +182,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   page_lru_head->prev->next=p;
   page_lru_head->prev = p;
   num_lru_pages++;
-  release(&lru_head_lock);
+  release(&lru_head_lock);*/
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
   cprintf("lru pop\n");
