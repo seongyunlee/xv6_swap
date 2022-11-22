@@ -27,6 +27,7 @@ struct {
   struct run *freelist;
 } kmem;
 
+struct spinlock lru_head_lock;
 struct page pages[PHYSTOP/PGSIZE];
 struct page *page_lru_head;
 struct page *lru_clock_hand;
@@ -56,6 +57,7 @@ kinit2(void *vstart, void *vend)
 void
 swapinit(void){
   initlock(&swapTable.lock,"swaptable");
+  initlock(&lru_head_lock,"lru head lock");
   swapTable.bitmap=kalloc();
   memset(swapTable.bitmap,0,PGSIZE);
 }
@@ -110,6 +112,9 @@ try_again:
     kmem.freelist = r->next;
   if(kmem.use_lock)
     release(&kmem.lock);
+  int frameNumber = V2P(r)/PGSIZE;
+  struct proc *p = myproc();
+  pages[frameNumber].pgdir = p->pgdir;
   return (char*)r;
 }
 int allocSwapBlock(){
