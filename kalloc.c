@@ -176,7 +176,7 @@ int reclaim(){
       lru_pop2(p);
       release(&lru_head_lock);
       swapwrite(ptr,blknum);
-      kfree((char*)pa);
+      kfree((char*)P2V(pa));
       *pte = *pte & ~PTE_P & 0xFFF;
       *pte = *pte | (blknum<<12);
       break;
