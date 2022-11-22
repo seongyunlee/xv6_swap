@@ -171,9 +171,7 @@ int reclaim(){
   return 1;
 }
 void lru_insert(char* va,pde_t *pgdir,int pa){
-  cprintf("lru insert\n");
   int framenumber = pa/PGSIZE;
-  cprintf("frame number %d max Framenumber %d\n",framenumber,PHYSTOP/PGSIZE);
   struct page *p = &pages[framenumber];
   
   p->vaddr=va;
@@ -193,11 +191,9 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
     page_lru_head->prev = p;
     num_lru_pages++;
   }
-  cprintf("get lock\n");
   release(&lru_head_lock);
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
-  cprintf("lru pop\n");
   int framenumber = pa/PGSIZE;
   struct page *p = &pages[framenumber];
   acquire(&lru_head_lock);
