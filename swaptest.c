@@ -10,7 +10,7 @@
 
 
 int main () {
-    fork();
+    
     for (int i =0 ; i<100;i++){
         printf(1,"when swap? %d\n",i);
         sbrk(409600);
