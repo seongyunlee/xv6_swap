@@ -142,21 +142,27 @@ int allocSwapBlock(){
 
 int reclaim(){
   //select victim
-  cprintf("reclaim!\n");
+  cprintf("reclaim! the lru length %d\n",num_lru_pages);
   struct page *p=lru_clock_hand;
+  acquire(&lru_head_lock);
   while(1){
     if(!p) return -1;
     //clock algorithm;
     //if access bit 0 -> swap out
     //else change it to 0
     pte_t *pte=walkpgdir(p->pgdir,p->vaddr,0);
-    if(!((*pte)& PTE_P)) panic("not present page");
+    if(!((*pte)& PTE_P)){
+      release(&lru_head_lock);
+      panic("not present page");
+      return -1;
+      }
     if((*pte)&PTE_A){
       *pte = ~PTE_A & (*pte);
     }
     else{
       int blknum = allocSwapBlock();
       if(blknum==-1){
+        release(&lru_head_lock);
         return -1;
       }
       uint pa = PTE_ADDR(*pte);
@@ -168,6 +174,7 @@ int reclaim(){
     }
     p=p->next;
   }
+  release(&lru_head_lock);
   return 1;
 }
 void lru_insert(char* va,pde_t *pgdir,int pa){
