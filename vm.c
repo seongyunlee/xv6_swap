@@ -341,7 +341,7 @@ copyuvm(pde_t *pgdir, uint sz)
       kfree(mem);
       goto bad;
     }
-    lru_insert((char *)i,pgdir,V2P(mem));
+    lru_insert((char *)i,d,V2P(mem));
   }
   return d;
 
