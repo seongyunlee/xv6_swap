@@ -178,12 +178,18 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   p->pgdir=pgdir;
   
   acquire(&lru_head_lock);
-  /*
+  if(!page_lru_head){
+    page_lru_head=p;
+    p->next=p;
+    p->prev=p;
+  }
+  else{
   p->next = page_lru_head;
   p->prev = page_lru_head->prev;
   page_lru_head->prev->next=p;
   page_lru_head->prev = p;
-  num_lru_pages++;*/
+  num_lru_pages++;
+  }
   cprinf("get lock\n");
   release(&lru_head_lock);
 }
