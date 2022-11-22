@@ -8,7 +8,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "spinlock.h"
-void lru_pop2(char* va,pde_t *pgdir,int pa);
+void lru_pop2(struct page *p);
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
                    // defined by the kernel linker script in kernel.ld
@@ -56,8 +56,8 @@ kinit2(void *vstart, void *vend)
 }
 void
 swapinit(void){
-  //initlock(&swapTable.lock,"swaptable");
-  //initlock(&lru_head_lock,"lru head lock");
+  initlock(&swapTable.lock,"swaptable");
+  initlock(&lru_head_lock,"lru head lock");
   swapTable.bitmap=(int*)kalloc();
   cprintf("swap init\n");
   memset(swapTable.bitmap,0,PGSIZE);
@@ -125,20 +125,20 @@ try_again:
   return (char*)r;
 }
 int allocSwapBlock(){
-  //acquire(&swapTable.lock);
+  acquire(&swapTable.lock);
   int *byte = swapTable.bitmap;
   for(int i=0;i<SWAPMAX/8;i++){
     if(*byte==0xFFFFFFFF) continue;
     for(int ind=0;ind<32;ind++){
       if(((1<<ind)&(*byte)) == 0){
         *byte = (*byte | 1<<ind);
-        //release(&swapTable.lock);
+        release(&swapTable.lock);
         return (i*8)+ind;
       }
     }
     byte++;
   }
-  //release(&swapTable.lock);
+  release(&swapTable.lock);
   return -1;
 }
 
@@ -147,7 +147,7 @@ int reclaim(){
   cprintf("reclaim! the lru length %d\n",num_lru_pages);
   struct page *p=lru_clock_hand;
   if(!p) p = page_lru_head;
-  //acquire(&lru_head_lock);
+  acquire(&lru_head_lock);
   //cprintf("acquire lru head lock\n");
   while(1){
     if(!p) return -1;
@@ -156,8 +156,8 @@ int reclaim(){
     //else change it to 0
     pte_t *pte=walkpgdir(p->pgdir,p->vaddr,0);
     if((PTE_U & *pte)==0) panic("not user page");
-    if(!((*pte)& PTE_P)){
-      //release(&lru_head_lock);
+    if((PTE_P & *pte)==0){
+      release(&lru_head_lock);
       panic("not present page");
       return -1;
       }
@@ -167,15 +167,16 @@ int reclaim(){
     else{
       int blknum = allocSwapBlock();
       if(blknum==-1){
-        //release(&lru_head_lock);
+        release(&lru_head_lock);
         cprintf("no swap space\n");
         return -1;
       }
       uint pa = PTE_ADDR(*pte);
       char *ptr = P2V(pa);
       lru_pop2(p->vaddr,p->pgdir,pa);
-      //release(&lru_head_lock);
+      release(&lru_head_lock);
       swapwrite(ptr,blknum);
+      kfree(pa);
       *pte = *pte & ~PTE_P & 0xFFF;
       *pte = *pte | (blknum<<12);
       break;
@@ -191,7 +192,7 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
   p->vaddr=va;
   p->pgdir=pgdir;
   
-  //acquire(&lru_head_lock);
+  acquire(&lru_head_lock);
   if(!page_lru_head){
     page_lru_head=p;
     p->next=p;
@@ -205,25 +206,24 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
     page_lru_head->prev = p;
     num_lru_pages++;
   }
-//release(&lru_head_lock);
+release(&lru_head_lock);
 }
-void lru_pop2(char* va,pde_t *pgdir,int pa){
-  int framenumber = pa/PGSIZE;
-  struct page *p = &pages[framenumber];
+void lru_pop2(struct page *p){
   struct page *cur = page_lru_head;
   for(int i=0;i<num_lru_pages;i++){
     if(cur==p){
       cur->prev->next=cur->next;
       cur->next->prev=cur->prev;
       num_lru_pages--;
-      break;
+      return;
     }
   }
+  cprintf("no pop\n");
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
   int framenumber = pa/PGSIZE;
   struct page *p = &pages[framenumber];
-  //acquire(&lru_head_lock);
+  acquire(&lru_head_lock);
   struct page *cur = page_lru_head;
   for(int i=0;i<num_lru_pages;i++){
     if(cur==p){
@@ -233,5 +233,5 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
       break;
     }
   }
-  //release(&lru_head_lock);
+  release(&lru_head_lock);
 }
