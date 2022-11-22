@@ -152,6 +152,7 @@ int reclaim(){
     //if access bit 0 -> swap out
     //else change it to 0
     pte_t *pte=walkpgdir(p->pgdir,p->vaddr,0);
+    if((PTE_U & *pte)>0) panic("not user page");
     if(!((*pte)& PTE_P)){
       release(&lru_head_lock);
       panic("not present page");
