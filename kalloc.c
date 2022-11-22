@@ -59,6 +59,7 @@ swapinit(void){
   initlock(&swapTable.lock,"swaptable");
   initlock(&lru_head_lock,"lru head lock");
   swapTable.bitmap=kalloc();
+  cprintf("swap init\n");
   memset(swapTable.bitmap,0,PGSIZE);
 }
 void
@@ -142,6 +143,7 @@ int allocSwapBlock(){
 
 int reclaim(){
   //select victim
+  cprintf("reclaim!\n");
   struct page *p=lru_clock_hand;
   while(1){
     if(!p) break;
