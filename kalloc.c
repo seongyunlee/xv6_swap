@@ -131,7 +131,7 @@ int allocSwapBlock(){
 }
 
 
-int reclaim(){
+int reclaim(void){
   //select victim
   struct page *p=lru_clock_hand;
   while(1){
