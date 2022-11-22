@@ -170,10 +170,6 @@ struct {
   struct inode inode[NINODE];
 } icache;
 
-struct {
-  struct spinlock lock;
-  char *bitmap;
-} swapTable;
 
 void
 iinit(int dev)
@@ -191,12 +187,7 @@ iinit(int dev)
           sb.ninodes, sb.nlog, sb.logstart, sb.inodestart,
           sb.bmapstart);
 }
-void
-swapinit(void){
-  initlock(&swapTable.lock,"swaptable");
-  swapTable.bitmap=kalloc();
-  memset(swapTable.bitmap,0,PGSIZE);
-}
+
 
 static struct inode* iget(uint dev, uint inum);
 
