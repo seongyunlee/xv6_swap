@@ -274,7 +274,7 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       if(pa == 0)
         panic("kfree");
       char *v = P2V(pa);
-      lru_pop(v,pgdir,pa);
+      lru_pop(v,pgdir,(int)pa);
       kfree(v);
       *pte = 0;
     }
