@@ -15,5 +15,7 @@ int main () {
     a = malloc(4);
     b = malloc(4);
     swapstat(a, b);
+
+    printf(1,"swapstat %d %d\n",*a,*b);
     return 1;
 }
