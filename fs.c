@@ -688,20 +688,16 @@ void swapwrite(char* ptr, int blkno)
 {
 	struct buf* bp;
 	int i;
-  cprintf("swap out\n");
+  cprintf("swap out out to %d\n",blkno);
 	if ( blkno < 0 || blkno >= SWAPMAX / 8 )
 		panic("swapread: blkno exceed range");
 
 	for ( i=0; i < 8; ++i ) {
 		nr_sectors_write++;
-    cprintf("swap out to %d \n",blkno * 8 + SWAPBASE + i);
 		bp = bread(0, blkno * 8 + SWAPBASE + i);
 		memmove(bp->data, ptr + i * BSIZE, BSIZE);
-    cprintf("buf1\n");
 		bwrite(bp);
-    cprintf("buf2\n");
 		brelse(bp);
-    cprintf("release\n");
 	}
 }
 
