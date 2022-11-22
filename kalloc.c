@@ -163,6 +163,7 @@ int reclaim(){
       int blknum = allocSwapBlock();
       if(blknum==-1){
         release(&lru_head_lock);
+        cprinf("no swap space\n");
         return -1;
       }
       uint pa = PTE_ADDR(*pte);
