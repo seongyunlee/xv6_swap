@@ -171,7 +171,7 @@ int reclaim(){
 void lru_insert(char* va,pde_t *pgdir,int pa){
   cprintf("lru insert\n");
   int framenumber = pa/PGSIZE;
-  cprintf("frame number %d\n",framenumber);
+  cprintf("frame number %d max Framenumber\n",framenumber,PHYSTOP/PGSIZE);
   //struct page *p = &pages[framenumber];
   /*
   p->vaddr=va;
