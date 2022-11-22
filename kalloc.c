@@ -149,7 +149,7 @@ int reclaim(void){
       if(blknum==-1){
         return -1;
       }
-      swapwrite((char *)P2V(TE_ADDR(*pte)),blknum);
+      swapwrite((char *)P2V({PTE_ADDR(*pte)),blknum);
       break;
     }
     p=p->next;
