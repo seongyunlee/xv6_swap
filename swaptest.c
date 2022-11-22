@@ -14,7 +14,7 @@ int main () {
 
     a = malloc(4);
     b = malloc(4);
-
+    printf(1,"malloc success\n");
 
     swapstat(a, b);
 }
