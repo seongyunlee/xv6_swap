@@ -72,7 +72,7 @@ char*           kalloc(void);
 void            kfree(char*);
 void            kinit1(void*, void*);
 void            kinit2(void*, void*);
-
+int             reclaim(void);
 // kbd.c
 void            kbdintr(void);
 
@@ -188,7 +188,7 @@ void            switchuvm(struct proc*);
 void            switchkvm(void);
 int             copyout(pde_t*, uint, void*, uint);
 void            clearpteu(pde_t *pgdir, char *uva);
-
+pte_t *walkpgdir(pde_t *pgdir, const void *va, int alloc)
 
 
 // number of elements in fixed-size array

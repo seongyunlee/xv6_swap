@@ -93,7 +93,8 @@ struct segdesc {
 // Page table/directory entry flags.
 #define PTE_P           0x001   // Present
 #define PTE_W           0x002   // Writeable
-#define PTE_U           0x004   // User
+#define PTE_U           0x004   // 
+#define PTE_A           0x020   // User
 #define PTE_PS          0x080   // Page Size
 
 // Address in page table or page directory entry

@@ -677,7 +677,9 @@ nameiparent(char *path, char *name)
 {
   return namex(path, 1, name);
 }
-
+int reclaim(){
+  
+}
 void swapread(char* ptr, int blkno)
 {
 	struct buf* bp;

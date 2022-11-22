@@ -16,6 +16,10 @@ extern char end[]; // first address after kernel loaded from ELF file
 struct run {
   struct run *next;
 };
+struct {
+  struct spinlock lock;
+  char *bitmap;
+} swapTable;
 
 struct {
   struct spinlock lock;
@@ -25,6 +29,7 @@ struct {
 
 struct page pages[PHYSTOP/PGSIZE];
 struct page *page_lru_head;
+struct page *lru_clock_hand;
 int num_free_pages;
 int num_lru_pages;
 
@@ -48,7 +53,12 @@ kinit2(void *vstart, void *vend)
   freerange(vstart, vend);
   kmem.use_lock = 1;
 }
-
+void
+swapinit(void){
+  initlock(&swapTable.lock,"swaptable");
+  swapTable.bitmap=kalloc();
+  memset(swapTable.bitmap,0,PGSIZE);
+}
 void
 freerange(void *vstart, void *vend)
 {
@@ -87,18 +97,62 @@ kfree(char *v)
 char*
 kalloc(void)
 {
-  struct run *r;
+  struct run *r = (struct run*)0;
 
-//try_again:
+try_again:
   if(kmem.use_lock)
     acquire(&kmem.lock);
   r = kmem.freelist;
-//  if(!r && reclaim())
-//	  goto try_again;
+  if(!r && reclaim()){
+      goto try_again;
+  }
   if(r)
     kmem.freelist = r->next;
   if(kmem.use_lock)
     release(&kmem.lock);
   return (char*)r;
 }
+int allocSwapBlock(){
+  acquire(&swapTable.lock);
+  char *byte = swapTable.bitmap;
+  for(int i=0;i<=(SWAPMAX-SWAPBASE)/8;i++){
+    if((int)(*byte)==0) continue;
+    for(int ind=0;ind<8;ind++){
+      if(1<<ind==*byte){
+        *byte = (*byte | 1<<ind);
+        release(&swapTable.lock);
+        return (i*8)+ind;
+      }
+    }
+    byte++;
+  }
+  release(&swapTable.lock);
+  return -1;
+}
 
+
+int reclaim(){
+  //select victim
+  struct page *p=lru_clock_hand;
+  while(1){
+    if(!p) break;
+    //clock algorithm;
+    //if access bit 0 -> swap out
+    //else change it to 0
+    pte_t *pte=walkpgdir(p->pgdir,p->vaddr,0);
+    if(!((*pte)& PTE_P)) panic("not present page");
+    if((*pte)&PTE_A){
+      *pte = ~PTE_A & (*pte);
+    }
+    else{
+      int blknum = allocSwapBlock();
+      if(blknum==-1){
+        return -1;
+      }
+      swapwrite((char *)P2V(TE_ADDR(*pte)),blknum);
+      break;
+    }
+    p=p->next;
+  }
+  return 1;
+}
