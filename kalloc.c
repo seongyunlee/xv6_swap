@@ -239,12 +239,12 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
     }
     cur=cur->next;
   }
-  panic("no pop");
   for(int i=0;i<num_lru_pages;i++){
     if(cur==p){
       cprintf("%x\n",(int)p);
     }
     cur=cur->next;
   }
+  panic("no pop");
   release(&lru_head_lock);
 }
