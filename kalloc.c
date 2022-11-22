@@ -150,7 +150,6 @@ int reclaim(){
         return -1;
       }
       uint pa = P2V(PTE_ADDR(*pte));
-WW
       swapwrite((char *)(pa),blknum);
       break;
     }
