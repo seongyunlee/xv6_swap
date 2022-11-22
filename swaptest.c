@@ -14,7 +14,7 @@ int main () {
 
     char *p = malloc(40960);
     printf(1,"allocate 10 pages%x\n",(int)p);
-    swapstat(a, b);
+    swapstat(&a, &b);
     for(int i=0;i<10;i++){
         fork();
     }
