@@ -230,8 +230,9 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
       cur->prev->next=cur->next;
       cur->next->prev=cur->prev;
       num_lru_pages--;
-      break;
+      release(&lru_head_lock);
+      return;
     }
   }
-  release(&lru_head_lock);
+  cprintf("no pop\n");
 }
