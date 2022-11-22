@@ -171,7 +171,7 @@ int reclaim(){
       }
       uint pa = PTE_ADDR(*pte);
       char *ptr = P2V(pa);
-      lru_pop(p->vaddr,p->pgdir,pa);
+      lru_pop2(p->vaddr,p->pgdir,pa);
       release(&lru_head_lock);
       swapwrite(ptr,blknum);
       *pte = *pte & ~PTE_P & 0xFFF;
@@ -204,6 +204,19 @@ void lru_insert(char* va,pde_t *pgdir,int pa){
     num_lru_pages++;
   }
   release(&lru_head_lock);
+}
+void lru_pop2(char* va,pde_t *pgdir,int pa){
+  int framenumber = pa/PGSIZE;
+  struct page *p = &pages[framenumber];
+  struct page *cur = page_lru_head;
+  for(int i=0;i<num_lru_pages;i++){
+    if(cur==p){
+      cur->prev->next=cur->next;
+      cur->next->prev=cur->prev;
+      num_lru_pages--;
+      break;
+    }
+  }
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
   int framenumber = pa/PGSIZE;
