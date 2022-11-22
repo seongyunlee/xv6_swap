@@ -12,10 +12,13 @@
 int main () {
     int *a, *b;
 
-    a = malloc(4);
-    b = malloc(4);
+    a = malloc(40960);
     swapstat(a, b);
+    for(int i=0;i<10;i++){
+        fork();
+    }
+    
 
     printf(1,"swapstat %d %d\n",*a,*b);
-    return 0;
+    exit();
 }
