@@ -8,7 +8,6 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "spinlock.h"
-#include "proc.h"
 
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
@@ -106,16 +105,18 @@ try_again:
   if(kmem.use_lock)
     acquire(&kmem.lock);
   r = kmem.freelist;
-  if(!r && reclaim()){
+  if(!r){
+    if(reclaim()>0)
       goto try_again;
+    else{
+      cprintf("Out of memory");
+      retrun 0;
+    }
   }
   if(r)
     kmem.freelist = r->next;
   if(kmem.use_lock)
     release(&kmem.lock);
-  //int frameNumber = V2P(r)/PGSIZE;
-  //struct proc *p = myproc();
-  //pages[frameNumber].pgdir = p->pgdir;
   return (char*)r;
 }
 int allocSwapBlock(){
@@ -162,4 +163,32 @@ int reclaim(){
     p=p->next;
   }
   return 1;
+}
+void lru_insert(char* va,pde_t *pgdir,int pa){
+  int framenumber = pa/PGSIZE;
+  struct page *p = &pages[framenumber];
+  p->vaddr=va;
+  p->pgdir=pgdir;
+  acquire(&lru_head_lock);
+  p->next = page_lru_head;
+  p->prev = page_lru_head->prev;
+  page_lru_head->prev->next=p;
+  page_lru_head->prev = p;
+  num_lru_pages++;
+  release(&lru_head_lock);
+}
+void lru_pop(char* va,pde_t *pgdir,int pa){
+  int framenumber = pa/PGSIZE;
+  struct page *p = &pages[framenumber];
+  acquire(&lru_head_lock);
+  struct page *cur = page_lru_head;
+  for(int i=0;i<num_lru_pages;i++){
+    if(cur==p){
+      cur->prev->next=cur->next;
+      cur->next->prev=cur->prev;
+      num_lru_pages--;
+      break;
+    }
+  }
+  release(&lru_head_lock);
 }

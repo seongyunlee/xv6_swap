@@ -74,6 +74,8 @@ void            kfree(char*);
 void            kinit1(void*, void*);
 void            kinit2(void*, void*);
 int             reclaim(void);
+void lru_insert(char* va,pde_t *pgdir,int pa);
+void lru_pop(char* va,pde_t *pgdir,int pa){
 // kbd.c
 void            kbdintr(void);
 
