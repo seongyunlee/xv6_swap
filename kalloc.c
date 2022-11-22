@@ -239,6 +239,7 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
     }
     cur=cur->next;
   }
+  cprintf("num lru pages %d\n",num_lru_pages);
   for(int i=0;i<num_lru_pages;i++){
     if(cur==p){
       cprintf("%x\n",(int)p);
