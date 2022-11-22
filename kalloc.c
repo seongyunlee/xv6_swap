@@ -131,7 +131,7 @@ int allocSwapBlock(){
 }
 
 
-int reclaim(void){
+int reclaim(){
   //select victim
   struct page *p=lru_clock_hand;
   while(1){
@@ -149,7 +149,9 @@ int reclaim(void){
       if(blknum==-1){
         return -1;
       }
-      swapwrite((char *)P2V({PTE_ADDR(*pte)),blknum);
+      uint pa = P2V(PTE_ADDR(*pte));
+WW
+      swapwrite((char *)(pa),blknum);
       break;
     }
     p=p->next;
