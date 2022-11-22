@@ -10,12 +10,10 @@
 
 
 int main () {
-    int a,b;
-
-    char *p = malloc(409600);
-    printf(1,"allocate 10 pages%x\n",(int)p);
-    swapstat(&a, &b);
-    fork();
+    for (int i =0 ; i<100;i++){
+        printf(1,"when swap? %d\n",i);
+        sbrk(409600);
+    }
 
     printf(1,"swapstat %d %d\n",a,b);
     exit();
