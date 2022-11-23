@@ -130,7 +130,7 @@ int allocSwapBlock(){
   for(int i=0;i<SWAPMAX/8;i++){
     if(*byte==0xFFFFFFFF){
       byte++;
-      break;
+      continue;
     }  
     for(int ind=0;ind<32;ind++){
       if(((1<<ind)&(*byte)) == 0){
