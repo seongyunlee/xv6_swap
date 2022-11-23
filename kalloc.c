@@ -154,12 +154,6 @@ int reclaim(){
   acquire(&lru_head_lock);
   //cprintf("acquire lru head lock\n");
 
-  //print all lru node//
-  struct page *p = lru_clock_hand;
-  for(int i=0;i<num_lru_pages;i++){
-    cprintf("lru : %x \n",(int)p->vaddr);
-    p=p->prev;
-  }
   while(1){
     if(!lru_clock_hand) return -1;
     //clock algorithm;
@@ -173,6 +167,7 @@ int reclaim(){
       return -1;
       }
     if((*pte)&PTE_A){
+      cprinf("%x accses bit set\n",lru_clock_hand->vaddr);
       *pte = (~PTE_A) & (*pte);
     }
     else{
