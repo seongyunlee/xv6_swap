@@ -98,7 +98,7 @@ kfree(char *v)
 // Returns a pointer that the kernel can use.
 // Returns 0 if the memory cannot be allocated.
 char*
-(void)
+kalloc(void)
 {
   struct run *r = (struct run*)0;
 
