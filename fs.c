@@ -688,7 +688,6 @@ void swapwrite(char* ptr, int blkno)
 {
 	struct buf* bp;
 	int i;
-  cprintf("swap out out to %d\n",blkno);
 	if ( blkno < 0 || blkno >= SWAPMAX / 8 )
 		panic("swapread: blkno exceed range");
 
