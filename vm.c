@@ -393,7 +393,6 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
 int isSwapped(uint va){
   pte_t *pte = walkpgdir(myproc()->pgdir,(void*)va,0);
   if (PTE_V & *pte){
-    cprintf("swap in\n");
     int blkno = (int)(((uint)(*pte))>>12);
     char* p = kalloc();
     int perm = PTE_FLAGS(*pte);

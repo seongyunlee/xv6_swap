@@ -22,7 +22,7 @@ int main () {
         arr[i]=p;
     }
     printf(1,"allocated done\n");
-    for(int i=0;i<ITER;i++){
+    for(int i=0;i<ITER;i+=100){
         printf(1,"print %d : %x ->%c\n",i,(int)arr[i],*arr[i]);
     }
     printf(1,"read after swapping %x %d\n",(int)k,*k);

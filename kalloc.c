@@ -98,7 +98,7 @@ kfree(char *v)
 // Returns a pointer that the kernel can use.
 // Returns 0 if the memory cannot be allocated.
 char*
-kalloc(void)
+`(void)
 {
   struct run *r = (struct run*)0;
 
@@ -152,12 +152,15 @@ int reclaim(){
   //cprintf("acquire lru head lock\n");
 
   while(1){
-    if(!lru_clock_hand) return -1;
+    if(!lru_clock_hand){
+      release(&lru_head_lock);
+      return 0;
+    }
     //clock algorithm;
     //if access bit 0 -> swap out
     //else change it to 0
     pte_t *pte=walkpgdir(lru_clock_hand->pgdir,lru_clock_hand->vaddr,0);
-    if((int)pte == 0) panic("no pte");
+    if((int)pte == 0) continue;
     if((PTE_U & *pte)==0){
       lru_clock_hand=lru_clock_hand->prev;
       continue;
@@ -182,7 +185,7 @@ int reclaim(){
       char *ptr = P2V(pa);
       lru_pop2(lru_clock_hand);
       release(&lru_head_lock);
-      cprintf("swap out -> %x\n",(int)lru_clock_hand ->vaddr);
+      //cprintf("swap out -> %x\n",(int)lru_clock_hand ->vaddr);
       swapwrite(ptr,blknum);
       kfree((char*)P2V(pa));
       *pte = PTE_FLAGS(*pte) & ~PTE_P;
@@ -231,7 +234,6 @@ void lru_pop2(struct page *p){
     }
     cur=cur->next;
   }
-  panic("no pop\n");
 }
 void lru_pop(char* va,pde_t *pgdir,int pa){
   int framenumber = pa/PGSIZE;
@@ -250,6 +252,5 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
     }
     cur=cur->next;
   }
-  panic("no pop");
   release(&lru_head_lock);
 }
