@@ -8,12 +8,13 @@
 #include "traps.h"
 
 #include "memlayout.h"
+#define ITER 300
 
-char* arr[200];
+char* arr[ITER];
 
 int main () {
     int *k = (int*)malloc(4);
-    for (int i =0 ; i<200;i++){
+    for (int i =0 ; i<ITER;i++){
         printf(1,"when swap? %d\n",i);
         char* p = sbrk(40960);
         if(p==(char*)-1) break;
@@ -21,10 +22,10 @@ int main () {
         arr[i]=p;
     }
     printf(1,"allocated done\n");
-    for(int i=0;i<200;i++){
+    for(int i=0;i<ITER;i++){
         printf(1,"print %d : %x ->%c\n",i,(int)arr[i],*arr[i]);
     }
-    printf(1,"read after swapping %x %d",(int)k,*k);
+    printf(1,"read after swapping %x %d\n",(int)k,*k);
     int a,b;
     swapstat(&a,&b);
     printf(1,"swapstat %d %d\n",a,b);
