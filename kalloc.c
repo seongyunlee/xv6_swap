@@ -150,9 +150,16 @@ int allocSwapBlock(){
 int reclaim(){
   //select victim
   cprintf("reclaim! the lru length %d\n",num_lru_pages);
-  if(!lru_clock_hand) lru_clock_hand = page_lru_head;
+  if(!lru_clock_hand) lru_clock_hand = page_lru_head->prev;
   acquire(&lru_head_lock);
   //cprintf("acquire lru head lock\n");
+
+  //print all lru node//
+  struct page *p = lru_clock_hand;
+  for(int i=0;i<num_lru_pages;i++){
+    cprintf("lru : %x \n",(int)p->vaddr);
+    p=p->prev;
+  }
   while(1){
     if(!lru_clock_hand) return -1;
     //clock algorithm;
