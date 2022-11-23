@@ -13,7 +13,6 @@
 char* arr[ITER];
 
 int main () {
-    fork();
     int *k = (int*)malloc(4);
     for (int i =0 ; i<ITER;i++){
         printf(1,"when swap? %d\n",i);
