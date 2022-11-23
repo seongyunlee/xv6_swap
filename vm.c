@@ -399,7 +399,9 @@ int isSwapped(uint va){
     int perm = ((int)(*pte) & 0xFFF);
     swapread(p,blkno);
     mappages(myproc()->pgdir,(void*)va,PGSIZE,V2P(p),perm);
+    return 1;
   }
+  return -1;
 }
 
 
