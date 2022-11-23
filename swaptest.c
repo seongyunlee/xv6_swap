@@ -15,7 +15,7 @@ int main () {
     int *k = (int*)malloc(4);
     for (int i =0 ; i<100;i++){
         printf(1,"when swap? %d\n",i);
-        sbrk(409600);
+        if(sbrk(409600)==-1) break;
     }
     printf(1,"read after swapping %x %d",(int)k,*k);
     int a,b;
