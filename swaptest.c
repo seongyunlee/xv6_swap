@@ -15,7 +15,7 @@ int main () {
     for (int i =0 ; i<100;i++){
         printf(1,"when swap? %d\n",i);
         char* p = sbrk(409600);
-        if(p==-1) break;
+        if(p==(char*)-1) break;
         *p = 'c';
         arr[i]=p;
     }
