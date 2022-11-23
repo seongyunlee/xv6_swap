@@ -20,7 +20,7 @@ int main () {
         arr[i]=p;
     }
     for(int i=0;i<100;i++){
-        printf("print %d : %x ->%c\n",i,(int)arr[i],*arr[i]);
+        printf(1,"print %d : %x ->%c\n",i,(int)arr[i],*arr[i]);
     }
     printf(1,"read after swapping %x %d",(int)k,*k);
     int a,b;
