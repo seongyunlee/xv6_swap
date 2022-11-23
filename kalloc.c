@@ -164,12 +164,12 @@ int reclaim(){
     }
     if((PTE_P & *pte)==0){
       release(&lru_head_lock);
-      cprintf("%x is not present\n",lru_clock_hand->vaddr);
-      panic("not present page");
+      //cprintf("%x is not present\n",lru_clock_hand->vaddr);
+      //panic("not present page");
       return -1;
       }
     if((*pte)&PTE_A){
-      cprintf("%x accses bit set\n",lru_clock_hand->vaddr);
+      //cprintf("%x accses bit set\n",lru_clock_hand->vaddr);
       *pte = (~PTE_A) & (*pte);
     }
     else{
