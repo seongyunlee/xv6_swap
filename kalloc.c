@@ -139,7 +139,7 @@ int allocSwapBlock(){
         *byte = (*byte | 1<<ind);
         cprintf("%x bitmap\n",*byte);
         release(&swapTable.lock);
-        return (i*8)+ind;
+        return (i*32)+ind;
       }
     }
   }
