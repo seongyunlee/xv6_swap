@@ -30,5 +30,4 @@ int main () {
     swapstat(&a,&b);
     printf(1,"swapstat %d %d\n",a,b);
     exit();
-    
 }
