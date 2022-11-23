@@ -110,11 +110,11 @@ try_again:
     if(kmem.use_lock)
       release(&kmem.lock);
     if(reclaim()>0){
-      cprintf("reclaim success");
+      cprintf("reclaim success\n");
       goto try_again;
     }
     else{
-      cprintf("Out of memory");
+      cprintf("Out of memory\n");
       return 0;
     }
   }
@@ -187,7 +187,7 @@ int reclaim(){
       cprintf("swap out -> %x\n",(int)lru_clock_hand->vaddr);
       swapwrite(ptr,blknum);
       kfree((char*)P2V(pa));
-      *pte = *pte & ~PTE_P & 0xFFF;
+      *pte = PTE_FLAGS(*pte) & ~PTE_P;
       *pte = *pte | (blknum<<12);
       break;
     }
@@ -224,9 +224,9 @@ void lru_pop2(struct page *p){
   struct page *cur = page_lru_head;
   for(int i=0;i<num_lru_pages;i++){
     if(cur==p){
+      page_lru_head=cur->prev;
       cur->prev->next=cur->next;
       cur->next->prev=cur->prev;
-      page_lru_head=cur->prev;
       num_lru_pages--;
       return;
     }
