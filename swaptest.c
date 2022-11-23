@@ -11,10 +11,13 @@
 
 int main () {
     
+
+    int *a = malloc(4);
     for (int i =0 ; i<100;i++){
         printf(1,"when swap? %d\n",i);
         sbrk(409600);
     }
+    printf(1,"read after swapping %x %d",(int)a,*a);
     int a,b;
     swapstat(&a,&b);
     printf(1,"swapstat %d %d\n",a,b);
