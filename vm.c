@@ -190,7 +190,7 @@ inituvm(pde_t *pgdir, char *init, uint sz)
   mem = kalloc();
   memset(mem, 0, PGSIZE);
   mappages(pgdir, 0, PGSIZE, V2P(mem), PTE_W|PTE_U);
-  lru_insert((char *)0,pgdir,(int)P2V(PTE_ADDR(*walkpgdir(pgdir,(char*)0,0))));
+  lru_insert((char *)0,pgdir,(int)PTE_ADDR(*walkpgdir(pgdir,(char*)0,0)));
   memmove(mem, init, sz);
 }
 
@@ -246,7 +246,7 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       kfree(mem);
       return 0;
     }
-    lru_insert((char*)a,pgdir,(int)P2V(PTE_ADDR(*walkpgdir(pgdir,(char*)a,0))));
+    lru_insert((char*)a,pgdir,(int)PTE_ADDR(*walkpgdir(pgdir,(char*)a,0)));
   }
   return newsz;
 }
@@ -341,7 +341,7 @@ copyuvm(pde_t *pgdir, uint sz)
       kfree(mem);
       goto bad;
     }
-    if(flags & PTE_U) lru_insert((char *)i,d,(int)P2V(PTE_ADDR(*walkpgdir(d,(char*)i,0))));
+    if(flags & PTE_U) lru_insert((char *)i,d,(int)PTE_ADDR(*walkpgdir(d,(char*)i,0)));
   }
   return d;
 
