@@ -398,7 +398,7 @@ int isSwapped(uint va){
     char* p = kalloc();
     int perm = ((int)(*pte) & 0xFFF);
     swapread(p,blkno);
-    mappages(myproc()->pgdir,va,PGSIZE,V2P(p),perm);
+    mappages(myproc()->pgdir,(void*)va,PGSIZE,V2P(p),perm);
   }
 }
 
