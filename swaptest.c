@@ -20,7 +20,7 @@ int main () {
         *p = 'c';
         arr[i]=p;
     }
-    cprintf("allocated done\n");
+    printf(1,"allocated done\n");
     for(int i=0;i<100;i++){
         printf(1,"print %d : %x ->%c\n",i,(int)arr[i],*arr[i]);
     }
