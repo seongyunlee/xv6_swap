@@ -191,7 +191,7 @@ int reclaim(){
       *pte = *pte | (blknum<<12);
       break;
     }
-    lru_clock_hand=lru_clock_hand->next;
+    lru_clock_hand=lru_clock_hand->prev;
   }
   return 1;
 }
@@ -251,5 +251,6 @@ void lru_pop(char* va,pde_t *pgdir,int pa){
     }
     cur=cur->next;
   }
+  panic("no pop");
   release(&lru_head_lock);
 }
