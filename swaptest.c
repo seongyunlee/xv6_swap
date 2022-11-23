@@ -15,7 +15,7 @@ int main () {
     int *k = (int*)malloc(4);
     for (int i =0 ; i<100;i++){
         printf(1,"when swap? %d\n",i);
-        char* p = sbrk(409600);
+        char* p = sbrk(40960);
         if(p==(char*)-1) break;
         *p = 'c';
         arr[i]=p;
