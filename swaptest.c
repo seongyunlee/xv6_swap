@@ -9,7 +9,7 @@
 
 #include "memlayout.h"
 
-char* arr[100];
+char* arr[500];
 
 int main () {
     int *k = (int*)malloc(4);
