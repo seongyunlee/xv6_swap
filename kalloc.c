@@ -169,6 +169,7 @@ int reclaim(){
       return -1;
       }
     if((*pte)&PTE_A){
+      cprintf("%x accses bit set\n",lru_clock_hand->vaddr);
       *pte = (~PTE_A) & (*pte);
     }
     else{
