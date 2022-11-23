@@ -188,7 +188,7 @@ int reclaim(){
       *pte = *pte | (blknum<<12);
       break;
     }
-    lru_clock_hand=lru_clock_hand->prev;
+    lru_clock_hand=lru_clock_hand->next;
   }
   return 1;
 }
