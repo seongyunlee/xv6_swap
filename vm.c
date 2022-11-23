@@ -396,9 +396,9 @@ int isSwapped(uint va){
     cprintf("swap in\n");
     int blkno = (int)(((uint)(*pte))>>12);
     char* p = kalloc();
-    int perm = ((int)(*pte) & 0xFFF);
+    int perm = PTE_FLAGS(*pte);
     swapread(p,blkno);
-    mappages(myproc()->pgdir,(void*)va,PGSIZE,V2P(p),perm);
+    *pte = V2P(p) | perm | PTE_P ;
     return 1;
   }
   return -1;
