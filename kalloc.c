@@ -160,6 +160,7 @@ int reclaim(){
     //if access bit 0 -> swap out
     //else change it to 0
     pte_t *pte=walkpgdir(lru_clock_hand->pgdir,lru_clock_hand->vaddr,0);
+    if((int)pte == 0) panic("no pte");
     if((PTE_U & *pte)==0){
       lru_clock_hand=lru_clock_hand->prev;
       continue;
