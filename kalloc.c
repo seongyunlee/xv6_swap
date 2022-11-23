@@ -127,6 +127,15 @@ try_again:
 int allocSwapBlock(){
   acquire(&swapTable.lock);
   int *byte = swapTable.bitmap;
+  cprintf("printbitmap\n");
+  for(int i=0;i<SWAPMAX/8;i++){
+    if(*byte==0xFFFFFFFF) continue;
+    for(int ind=0;ind<32;ind++){
+      cprintf("%x",*byte);
+    }
+    cprintf("\n");
+    byte++;
+  }
   for(int i=0;i<SWAPMAX/8;i++){
     if(*byte==0xFFFFFFFF) continue;
     for(int ind=0;ind<32;ind++){
