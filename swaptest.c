@@ -13,7 +13,7 @@ char* arr[100];
 
 int main () {
     int *k = (int*)malloc(4);
-    for (int i =0 ; i<100;i++){
+    for (int i =0 ; i<500;i++){
         printf(1,"when swap? %d\n",i);
         char* p = sbrk(40960);
         if(p==(char*)-1) break;
