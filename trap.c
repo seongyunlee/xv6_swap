@@ -81,7 +81,7 @@ trap(struct trapframe *tf)
     if(isSwapped(rcr2())){
       lapiceoi();
       break;
-    }W
+    }
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
