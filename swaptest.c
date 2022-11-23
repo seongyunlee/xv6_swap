@@ -9,11 +9,11 @@
 
 #include "memlayout.h"
 
-char* arr[500];
+char* arr[200];
 
 int main () {
     int *k = (int*)malloc(4);
-    for (int i =0 ; i<500;i++){
+    for (int i =0 ; i<200;i++){
         printf(1,"when swap? %d\n",i);
         char* p = sbrk(40960);
         if(p==(char*)-1) break;
@@ -21,7 +21,7 @@ int main () {
         arr[i]=p;
     }
     printf(1,"allocated done\n");
-    for(int i=0;i<100;i++){
+    for(int i=0;i<200;i++){
         printf(1,"print %d : %x ->%c\n",i,(int)arr[i],*arr[i]);
     }
     printf(1,"read after swapping %x %d",(int)k,*k);
