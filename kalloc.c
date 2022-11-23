@@ -59,7 +59,7 @@ swapinit(void){
   initlock(&swapTable.lock,"swaptable");
   initlock(&lru_head_lock,"lru head lock");
   swapTable.bitmap=(int*)kalloc();
-  cprintf("swap init\n");
+  //cprintf("swap init\n");
   memset(swapTable.bitmap,0,PGSIZE);
 }
 void
@@ -110,7 +110,7 @@ try_again:
     if(kmem.use_lock)
       release(&kmem.lock);
     if(reclaim()>0){
-      cprintf("reclaim success\n");
+     //cprintf("reclaim success\n");
       goto try_again;
     }
     else{
@@ -127,7 +127,6 @@ try_again:
 int allocSwapBlock(){
   acquire(&swapTable.lock);
   int *byte = swapTable.bitmap;
-  cprintf("printbitmap\n");
   for(int i=0;i<SWAPMAX/8;i++){
     if(*byte==0xFFFFFFFF){
       byte++;
@@ -135,9 +134,7 @@ int allocSwapBlock(){
     }  
     for(int ind=0;ind<32;ind++){
       if(((1<<ind)&(*byte)) == 0){
-        cprintf("%x:%x bitmap\n",(int)byte,*byte);
         *byte = (*byte | 1<<ind);
-        cprintf("%x bitmap\n",*byte);
         release(&swapTable.lock);
         return (i*32)+ind;
       }
@@ -149,7 +146,7 @@ int allocSwapBlock(){
 
 int reclaim(){
   //select victim
-  cprintf("reclaim! the lru length %d\n",num_lru_pages);
+  //cprintf("reclaim! the lru length %d\n",num_lru_pages);
   if(!lru_clock_hand) lru_clock_hand = page_lru_head->prev;
   acquire(&lru_head_lock);
   //cprintf("acquire lru head lock\n");
@@ -179,7 +176,6 @@ int reclaim(){
       int blknum = allocSwapBlock();
       if(blknum==-1){
         release(&lru_head_lock);
-        cprintf("no swap space\n");
         return -1;
       }
       uint pa = PTE_ADDR(*pte);

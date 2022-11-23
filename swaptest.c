@@ -8,7 +8,7 @@
 #include "traps.h"
 
 #include "memlayout.h"
-#define ITER 400
+#define ITER 4000
 
 char* arr[ITER];
 
@@ -16,7 +16,7 @@ int main () {
     int *k = (int*)malloc(4);
     for (int i =0 ; i<ITER;i++){
         printf(1,"when swap? %d\n",i);
-        char* p = sbrk(40960);
+        char* p = sbrk(4096);
         if(p==(char*)-1) break;
         *p = 'c';
         arr[i]=p;
