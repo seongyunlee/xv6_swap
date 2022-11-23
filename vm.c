@@ -71,7 +71,7 @@ mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
       return -1;
     if(*pte & PTE_P)
       panic("remap");
-    *pte = pa | perm | PTE_P;
+    *pte = pa | perm | PTE_P | PTE_V;
     if(a == last)
       break;
     a += PGSIZE;
@@ -390,6 +390,18 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
   }
   return 0;
 }
+int isSwapped(uint va){
+  pte_t *pte = walkpgdir(myproc()->pgdir,va,0);
+  if (PTE_V & *pte){
+    cprintf("swap in\n");
+    int blkno = (int)(((uint)(*pte))>>12);
+    char* p = kalloc();
+    int perm = ((int)(*pte) & 0xFFF);
+    swapread(p,blkno);
+    mappages(myproc()->pgdir,va,PGSIZE,V2P(p),perm);
+  }
+}
+
 
 //PAGEBREAK!
 // Blank page.

@@ -184,7 +184,7 @@ int reclaim(){
       swapwrite(ptr,blknum);
       kfree((char*)P2V(pa));
       *pte = *pte & ~PTE_P & 0xFFF;
-      *pte = *pte | (blknum<<12);
+      *pte = *pte | (blknum<<12) | ;
       break;
     }
     p=p->next;
