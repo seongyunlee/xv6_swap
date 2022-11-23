@@ -391,7 +391,7 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
   return 0;
 }
 int isSwapped(uint va){
-  pte_t *pte = walkpgdir(myproc()->pgdir,va,0);
+  pte_t *pte = walkpgdir(myproc()->pgdir,(void*)va,0);
   if (PTE_V & *pte){
     cprintf("swap in\n");
     int blkno = (int)(((uint)(*pte))>>12);
