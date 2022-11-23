@@ -150,16 +150,15 @@ int allocSwapBlock(){
 int reclaim(){
   //select victim
   cprintf("reclaim! the lru length %d\n",num_lru_pages);
-  struct page *p=lru_clock_hand;
-  if(!p) p = page_lru_head;
+  if(!lru_clock_hand) lru_clock_hand = page_lru_head;
   acquire(&lru_head_lock);
   //cprintf("acquire lru head lock\n");
   while(1){
-    if(!p) return -1;
+    if(!lru_clock_hand) return -1;
     //clock algorithm;
     //if access bit 0 -> swap out
     //else change it to 0
-    pte_t *pte=walkpgdir(p->pgdir,p->vaddr,0);
+    pte_t *pte=walkpgdir(lru_clock_hand->pgdir,lru_clock_hand->vaddr,0);
     if((PTE_U & *pte)==0) panic("not user page");
     if((PTE_P & *pte)==0){
       release(&lru_head_lock);
@@ -167,7 +166,7 @@ int reclaim(){
       return -1;
       }
     if((*pte)&PTE_A){
-      *pte = ~PTE_A & (*pte);
+      *pte = (~PTE_A) & (*pte);
     }
     else{
       int blknum = allocSwapBlock();
@@ -178,16 +177,16 @@ int reclaim(){
       }
       uint pa = PTE_ADDR(*pte);
       char *ptr = P2V(pa);
-      lru_pop2(p);
+      lru_pop2(lru_clock_hand);
       release(&lru_head_lock);
-      cprintf("swap out -> %x\n",(int)p->vaddr);
+      cprintf("swap out -> %x\n",(int)lru_clock_hand->vaddr);
       swapwrite(ptr,blknum);
       kfree((char*)P2V(pa));
       *pte = *pte & ~PTE_P & 0xFFF;
       *pte = *pte | (blknum<<12);
       break;
     }
-    p=p->next;
+    lru_clock_hand=lru_clock_hand->prev;
   }
   return 1;
 }
