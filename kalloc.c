@@ -175,6 +175,7 @@ int reclaim(){
       char *ptr = P2V(pa);
       lru_pop2(p);
       release(&lru_head_lock);
+      cprintf("swap out -> %x\n",(int)p->vaddr);
       swapwrite(ptr,blknum);
       kfree((char*)P2V(pa));
       *pte = *pte & ~PTE_P & 0xFFF;
