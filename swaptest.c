@@ -8,7 +8,7 @@
 #include "traps.h"
 
 #include "memlayout.h"
-#define ITER 300
+#define ITER 400
 
 char* arr[ITER];
 
