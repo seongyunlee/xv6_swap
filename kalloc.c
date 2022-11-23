@@ -129,7 +129,10 @@ int allocSwapBlock(){
   int *byte = swapTable.bitmap;
   cprintf("printbitmap\n");
   for(int i=0;i<SWAPMAX/8;i++){
-    if(*byte==0xFFFFFFFF) continue;
+    if(*byte==0xFFFFFFFF){
+      byte++;
+      continue;
+    }  
     for(int ind=0;ind<32;ind++){
       if(((1<<ind)&(*byte)) == 0){
         cprintf("%x:%x bitmap\n",(int)byte,*byte);
@@ -139,7 +142,6 @@ int allocSwapBlock(){
         return (i*8)+ind;
       }
     }
-    byte++;
   }
   release(&swapTable.lock);
   return -1;
