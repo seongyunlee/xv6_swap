@@ -166,6 +166,7 @@ int reclaim(){
     }
     if((PTE_P & *pte)==0){
       release(&lru_head_lock);
+      cprintf("%x is not present\n",lru_clock_hand->vaddr);
       panic("not present page");
       return -1;
       }
