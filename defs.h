@@ -76,6 +76,7 @@ void            kinit2(void*, void*);
 int             reclaim(void);
 void lru_insert(char* va,pde_t *pgdir,int pa);
 void lru_pop(char* va,pde_t *pgdir,int pa);
+int isSwapped(uint va);
 // kbd.c
 void            kbdintr(void);
 
