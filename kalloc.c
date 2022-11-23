@@ -191,6 +191,7 @@ int reclaim(){
       kfree((char*)P2V(pa));
       *pte = PTE_FLAGS(*pte) & ~PTE_P;
       *pte = *pte | (blknum<<12);
+      lru_clock_hand=lru_clock_hand->prev;
       break;
     }
     lru_clock_hand=lru_clock_hand->prev;
