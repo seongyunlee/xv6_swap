@@ -395,6 +395,7 @@ int isSwapped(uint va){
   if (PTE_V & *pte){
     int blkno = (int)(((uint)(*pte))>>12);
     char* p = kalloc();
+    if(!p) return -1;
     int perm = PTE_FLAGS(*pte);
     swapread(p,blkno);
     *pte = V2P(p) | perm | PTE_P ;
