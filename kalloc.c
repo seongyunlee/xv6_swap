@@ -59,7 +59,6 @@ swapinit(void){
   initlock(&swapTable.lock,"swaptable");
   initlock(&lru_head_lock,"lru head lock");
   swapTable.bitmap=(int*)kalloc();
-  //cprintf("swap init\n");
   memset(swapTable.bitmap,0,PGSIZE);
 }
 void
